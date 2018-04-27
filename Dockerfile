@@ -83,4 +83,4 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-WORKDIR /var/www/laravel
+WORKDIR /var/www/app
