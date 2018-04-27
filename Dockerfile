@@ -14,8 +14,8 @@ ENV LC_CTYPE=UTF-8
 ENV LANG=en_US.UTF-8
 ENV TERM xterm
 
+# Install PHP and extensions
 RUN add-apt-repository -y ppa:ondrej/php
-
 RUN apt-get update && apt-get install -y --force-yes \
         php7.1-cli \
         php7.1-common \
@@ -51,6 +51,10 @@ RUN apt-get update && apt-get install -y --force-yes \
         pkg-config \
         iputils-ping
 
+# Install MongoDB PHP extension
+RUN pecl channel-update pecl.php.net \
+    && pecl install mongodb \
+    && echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 # Add composer binaries to path
 RUN echo "export PATH=${PATH}:/var/www/laravel/vendor/bin:/root/.composer/vendor/bin" >> ~/.bashrc
