@@ -59,26 +59,22 @@ RUN echo "export PATH=${PATH}:/var/www/laravel/vendor/bin:/root/.composer/vendor
 RUN sed -i 's/^/;/g' /etc/php/7.1/cli/conf.d/20-xdebug.ini
 RUN echo "alias phpunit='php -dzend_extension=xdebug.so /var/www/laravel/vendor/bin/phpunit'" >> ~/.bashrc
 
-# Install Nodejs and some packages
+# Install Nodejs
 RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - \
-    && apt-get install -y nodejs \
-    && npm install -g eslint babel-eslint yarn
+    && apt-get install -y nodejs
 
-# Install Composer, PHPMetrics, PHPDepend, PHPMessDetector, PHPCopyPasteDetector
-RUN curl -s http://getcomposer.org/installer | php \
-    && mv composer.phar /usr/local/bin/composer \
-    && composer global require 'squizlabs/php_codesniffer=2.9' \
-        'phpmetrics/phpmetrics' \
-        'pdepend/pdepend' \
-        'phpmd/phpmd' \
-        'sebastian/phpcpd'
+# Install Yarn
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - \
+    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list \
+    && apt update \
+    && apt install yarn
 
-# Create symbolic links
-RUN ln -s /root/.composer/vendor/bin/phpcs /usr/bin/phpcs \
-    && ln -s /root/.composer/vendor/bin/pdepend /usr/bin/pdepend \
-    && ln -s /root/.composer/vendor/bin/phpmetrics /usr/bin/phpmetrics \
-    && ln -s /root/.composer/vendor/bin/phpmd /usr/bin/phpmd \
-    && ln -s /root/.composer/vendor/bin/phpcpd /usr/bin/phpcpd
+# Install Composer
+RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
+    && php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \
+    && php composer-setup.php \
+    && php -r "unlink('composer-setup.php');" \
+    && mv composer.phar /usr/bin/composer
 
 # Clean up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
