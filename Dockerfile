@@ -99,6 +99,21 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && mv composer.phar /usr/bin/composer \
     && echo "export PATH=${PATH}:/var/www/laravel/vendor/bin:/root/.composer/vendor/bin" >> ~/.bashrc
 
+RUN composer global require \
+    'squizlabs/php_codesniffer' \
+    'phpmetrics/phpmetrics' \
+    'pdepend/pdepend' \
+    'phpmd/phpmd' \
+    'sebastian/phpcpd' \
+    && cd ~/.composer/vendor/squizlabs/php_codesniffer/src/Standards \
+    && git clone https://github.com/wataridori/framgia-php-codesniffer.git Framgia
+
+RUN ln -s /root/.composer/vendor/bin/phpcs /usr/bin/phpcs \
+    && ln -s /root/.composer/vendor/bin/pdepend /usr/bin/pdepend \
+    && ln -s /root/.composer/vendor/bin/phpmetrics /usr/bin/phpmetrics \
+    && ln -s /root/.composer/vendor/bin/phpmd /usr/bin/phpmd \
+    && ln -s /root/.composer/vendor/bin/phpcpd /usr/bin/phpcpd
+
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR /var/www/app
