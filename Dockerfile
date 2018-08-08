@@ -4,6 +4,8 @@ MAINTAINER Nguyen Ngoc Vinh <ngocvinh.nnv@gmail.com>
 
 RUN DEBIAN_FRONTEND=noninteractive
 
+ENV TERM xterm
+
 RUN apt update && apt install -y \
         software-properties-common \
         locales \
@@ -17,7 +19,6 @@ ENV LANGUAGE=en_US.UTF-8
 ENV LC_ALL=en_US.UTF-8
 ENV LC_CTYPE=UTF-8
 ENV LANG=en_US.UTF-8
-ENV TERM xterm
 
 RUN echo "Asia/Ho_Chi_Minh" > /etc/timezone \
     && rm /etc/timezone \
