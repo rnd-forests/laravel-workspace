@@ -8,6 +8,7 @@ RUN apt update && apt install -y \
         software-properties-common \
         locales \
         tzdata \
+        libxml2-dev \
         apt-utils
 
 RUN locale-gen en_US.UTF-8
@@ -41,6 +42,7 @@ RUN apt-get update && apt-get install -y --force-yes \
         php-xdebug \
         php7.2-bcmath \
         php7.2-intl \
+        php7.2-soap \
         php7.2-dev \
         php-memcached \
         libcurl4-openssl-dev \
