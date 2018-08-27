@@ -84,8 +84,21 @@ RUN docker-php-ext-install \
     exif \
     zip
 
-RUN curl -sL https://deb.nodesource.com/setup_9.x | bash - \
-    && apt-get install -y nodejs
+ARG NVM_VERSION=v0.33.11
+ARG NODE_VERSION=v10.9.0
+ARG NODE_6_VERSION=6.11.0
+
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/${NVM_VERSION}/install.sh | bash
+
+RUN . ~/.nvm/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm install $NODE_6_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use --delete-prefix default \
+    && node -v \
+    && npm i npm -g \
+    && npm -v \
+    && npm install gulp-cli -g
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
