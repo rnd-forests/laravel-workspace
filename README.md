@@ -25,7 +25,7 @@ Installed PHP extensions:
 
 ### Packages
 Installed packages:
-- Node.js (v6.14.4 LTS, v8.11.4 LTS and v10.9.0 (default version))
+- Node.js (v4.9.1 LTS Argon, v6.14.4 LTS Boron, v8.11.4 LTS Carbon and v9.11.2 (default version))
 - Composer
 - Yarn
 - Gulp CLI
