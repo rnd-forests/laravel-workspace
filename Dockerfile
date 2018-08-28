@@ -1,6 +1,6 @@
 FROM php:7.2-cli
 
-MAINTAINER Nguyen Ngoc Vinh <ngocvinh.nnv@gmail.com>
+LABEL maintainer="Nguyen Ngoc Vinh <ngocvinh.nnv@gmail.com>"
 
 ENV TERM xterm
 
@@ -41,6 +41,7 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     g++ \
+    apt-transport-https \
     --no-install-recommends \
     && rm -r /var/lib/apt/lists/*
 
@@ -84,15 +85,26 @@ RUN docker-php-ext-install \
     exif \
     zip
 
+# NVM (Node Version Manager) version
 ARG NVM_VERSION=v0.33.11
-ARG NODE_VERSION=v10.9.0
-ARG NODE_6_VERSION=6.11.0
 
+# The default node version
+ARG NODE_VERSION=10.9.0
+
+# Node.js v6.14.4 LTS
+ARG NODE_6_VERSION=6.14.4
+
+# Node.js v8.11.4 LTS
+ARG NODE_8_VERSION=8.11.4
+
+# Installing NVM
 RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/${NVM_VERSION}/install.sh | bash
 
+# Installing different Node.js versions and Gulp
 RUN . ~/.nvm/nvm.sh \
     && nvm install $NODE_VERSION \
     && nvm install $NODE_6_VERSION \
+    && nvm install $NODE_8_VERSION \
     && nvm alias default $NODE_VERSION \
     && nvm use --delete-prefix default \
     && node -v \
@@ -103,7 +115,7 @@ RUN . ~/.nvm/nvm.sh \
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
     && apt-get update \
-    && apt-get install yarn
+    && apt-get install --no-install-recommends yarn
 
 RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php -r "if (hash_file('SHA384', 'composer-setup.php') === '544e09ee996cdf60ece3804abc52599c22b1f40f4323403c44d44fdfdd586475ca9813a858088ffbc1f233e9b180f061') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;" \

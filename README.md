@@ -25,9 +25,10 @@ Installed PHP extensions:
 
 ### Packages
 Installed packages:
-- Node.js (version 9.x)
+- Node.js (v6.14.4 LTS, v8.11.4 LTS and v10.9.0 (default version))
 - Composer
 - Yarn
+- Gulp CLI
 
 Composer packages:
 - PHP_CodeSniffer (https://github.com/squizlabs/PHP_CodeSniffer)
