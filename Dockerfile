@@ -85,32 +85,23 @@ RUN docker-php-ext-install \
     exif \
     zip
 
-# NVM (Node Version Manager) version
-ARG NVM_VERSION=v0.33.11
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
-# The default node version
-ARG NODE_VERSION=10.9.0
+RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
 
-# Node.js v6.14.4 LTS
-ARG NODE_6_VERSION=6.14.4
-
-# Node.js v8.11.4 LTS
-ARG NODE_8_VERSION=8.11.4
-
-# Installing NVM
-RUN curl -o- https://raw.githubusercontent.com/creationix/nvm/${NVM_VERSION}/install.sh | bash
-
-# Installing different Node.js versions and Gulp
-RUN . ~/.nvm/nvm.sh \
+ARG NODE_VERSION=9.11.2
+RUN source  ~/.nvm/nvm.sh \
+    && nvm install lts/argon \
+    && nvm install lts/boron \
+    && nvm install lts/carbon \
     && nvm install $NODE_VERSION \
-    && nvm install $NODE_6_VERSION \
-    && nvm install $NODE_8_VERSION \
     && nvm alias default $NODE_VERSION \
-    && nvm use --delete-prefix default \
-    && node -v \
-    && npm i npm -g \
-    && npm -v \
-    && npm install gulp-cli -g
+    && nvm use default
+
+ENV NODE_PATH /root/.nvm/versions/node/v$NODE_VERSION/lib/node_modules
+ENV PATH /root/.nvm/versions/node/v$NODE_VERSION/bin:$PATH
+
+RUN npm install gulp-cli -g
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
@@ -122,7 +113,7 @@ RUN php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" \
     && php composer-setup.php \
     && php -r "unlink('composer-setup.php');" \
     && mv composer.phar /usr/bin/composer \
-    && echo "export PATH=${PATH}:/var/www/laravel/vendor/bin:/root/.composer/vendor/bin" >> ~/.bashrc
+    && echo "export PATH=${PATH}:/var/www/app/vendor/bin:/root/.composer/vendor/bin" >> ~/.bashrc
 
 RUN composer global require \
     'squizlabs/php_codesniffer' \
