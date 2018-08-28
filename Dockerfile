@@ -102,6 +102,7 @@ ENV NODE_PATH /root/.nvm/versions/node/v$NODE_VERSION/lib/node_modules
 ENV PATH /root/.nvm/versions/node/v$NODE_VERSION/bin:$PATH
 
 RUN npm install gulp-cli -g
+RUN ln -s /root/.nvm/versions/node/v$NODE_VERSION/bin/gulp /usr/bin/gulp
 
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
     && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list \
