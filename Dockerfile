@@ -83,7 +83,8 @@ RUN docker-php-ext-install \
     soap \
     ldap \
     exif \
-    zip
+    zip \
+    pcntl
 
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
 
